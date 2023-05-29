@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ConsignmentList from './pages/consignment/ConsignmentList';
@@ -35,7 +35,11 @@ import { DashLayout, ProductDetailLayout } from './templates';
 import TriggerClass from './components/TriggerClass';
 
 const Home = () => {
-	return <div>POS APOTIK</div>;
+	return (
+		<Link to={'dashboard'}>
+			<div>Goto Dashboard</div>
+		</Link>
+	);
 };
 
 const Router = () => {
