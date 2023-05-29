@@ -1,0 +1,6 @@
+* Harga Pokok Produk = Harga Beli - Cashback + (Harga Beli - Cashback * PPN)
+* Total QTY = qty + qty_from_product_unit
+
+
+// NEW
+* Kolom Harga Beli di daftar product adalah rata2 harga beli yang diinput dari pembelian 
