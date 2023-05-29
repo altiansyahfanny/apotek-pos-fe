@@ -89,14 +89,14 @@ const TableProduct = () => {
 								<TD>
 									<InputCashback {...{ product, index }} />
 								</TD>
-								<TD>Rp. {formatToRupiah(product.product_price)}</TD>
+								<TD>{formatToRupiah(product.product_price)}</TD>
 								<TD className="whitespace-nowrap">
 									<PriceAnalysis
 										capital_price={product.capital_price}
 										product_price={product.product_price}
 									/>
 								</TD>
-								<TD className="whitespace-nowrap">Rp. {formatToRupiah(product.subtotal)}</TD>
+								<TD className="whitespace-nowrap">{formatToRupiah(product.subtotal)}</TD>
 								<TD textAlign="text-center">
 									<Button onClick={() => onDeleteRow(index)} />
 								</TD>

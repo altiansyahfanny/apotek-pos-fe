@@ -6,7 +6,7 @@ const initialState = {
 		profit_margin: 0,
 
 		// form to send
-		supplier_id: '',
+		factory_name: '',
 		product_category_id: '',
 		product_unit_id: '',
 		rack_id: '',

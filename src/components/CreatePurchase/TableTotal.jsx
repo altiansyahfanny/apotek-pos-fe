@@ -19,41 +19,62 @@ const TableTotal = () => {
 	const form = useSelector(getAddPurchaseFormState);
 	const [totalProductPrice, setTotalProductPrice] = useState(0);
 	const [totalPPN, setTotalPPN] = useState(0);
-	const [totalProductCashback, setTotalProductCashback] = useState(0);
 
 	useEffect(() => {
 		if ([...form.products].length > 0) {
-			const total_product_cashback = [...form.products].reduce((prev, product) => {
-				const cashback = product.cashback * (product.qty_from_product_unit * product.qty);
-				return prev + cashback;
-			}, 0);
 			const total_product_price = [...form.products].reduce(
-				(prev, product) =>
-					prev + product.product_purchase_price * (product.qty_from_product_unit * product.qty),
+				(prev, product) => prev + Number(product.subtotal),
 				0
 			);
 
-			// jika selain sudah termasuk pajak
-			if (form.tax_category != 3) {
+			// jika "Tidak Dikenakan Pajak"
+			if (form.tax_category == 1) {
+				setTotalPPN(0);
 				setTotalProductPrice(total_product_price);
-				setTotalPPN(Math.round(((total_product_price - total_product_cashback) * form.tax) / 100));
 			}
-			// jika sudah terkena pajak
-			else {
-				const total_capital_price = [...form.products].reduce((prev, product) => {
-					return prev + product.capital_price * (product.qty_from_product_unit * product.qty);
+
+			// jika "Belum Terkena Pajak"
+			if (form.tax_category == 2) {
+				const total_product_price_after_tax = [...form.products].reduce((prev, product) => {
+					return (
+						prev + Number(product.product_price) * (product.qty_from_product_unit * product.qty)
+					);
+				}, 0);
+				const total_product_price_before_tax = [...form.products].reduce((prev, product) => {
+					return (
+						prev +
+						(product.product_purchase_price - product.cashback) *
+							(product.qty_from_product_unit * product.qty)
+					);
 				}, 0);
 
-				const total_capital_price_without__ppn =
-					total_capital_price * (100 / (Number(form.tax) + 100));
-				setTotalProductPrice(Math.round(total_capital_price_without__ppn));
-				setTotalPPN(Math.round(total_capital_price - total_capital_price_without__ppn));
+				setTotalPPN(Math.round(total_product_price_after_tax - total_product_price_before_tax));
+				setTotalProductPrice(total_product_price_before_tax);
 			}
-			setTotalProductCashback(total_product_cashback);
+
+			// jika "Sudah Termasuk Pajak"
+			if (form.tax_category == 3) {
+				const total_product_price = [...form.products].reduce((prev, product) => {
+					return (
+						prev + Number(product.product_price) * (product.qty_from_product_unit * product.qty)
+					);
+				}, 0);
+				const total_product_purchase_price_without_tax =
+					total_product_price * (100 / (Number(form.tax) + 100));
+
+				// setTotalPPN(Math.round(total_product_price - total_product_purchase_price_without_tax));
+				setTotalPPN(total_product_price - total_product_purchase_price_without_tax);
+				setTotalProductPrice(Number(total_product_purchase_price_without_tax));
+			}
+
+			// jika "Belum Pilih Kategori Pajak"
+			if (form.tax_category == '') {
+				setTotalPPN(0);
+				setTotalProductPrice(total_product_price);
+			}
 		} else {
 			setTotalProductPrice(0);
 			setTotalPPN(0);
-			setTotalProductCashback(0);
 		}
 	}, [form, form.products]);
 
@@ -65,19 +86,17 @@ const TableTotal = () => {
 						<TH textAlign="text-center" title={'Item Barang'} />
 						<TH textAlign="text-center" title={'Total Harga'} />
 						<TH textAlign="text-center" title={'PPN'} />
-						<TH textAlign="text-center" title={'Diskon/Cashback'} />
+						<TH textAlign="text-center" title={'Cashback/Diskon'} />
 						<TH textAlign="text-center" title={'Biaya Lainnya'} />
 					</tr>
 				</thead>
 				<tbody>
 					<tr className="bg-whitw border-b dark:bg-gray-800 dark:border-gray-700 items-start ">
 						<TD textAlign="text-center">{form.products.length}</TD>
-						<TD textAlign="text-center">Rp. {formatToRupiah(totalProductPrice)}</TD>
-						<TD textAlign="text-center">Rp. {formatToRupiah(totalPPN)}</TD>
-						<TD textAlign="text-center">
-							Rp. {formatToRupiah(totalProductCashback + form.cashback)}
-						</TD>
-						<TD textAlign="text-center">Rp. {formatToRupiah(form.other_cost)}</TD>
+						<TD textAlign="text-center"> {formatToRupiah(totalProductPrice)}</TD>
+						<TD textAlign="text-center"> {formatToRupiah(totalPPN)}</TD>
+						<TD textAlign="text-center"> {formatToRupiah(form.cashback)}</TD>
+						<TD textAlign="text-center"> {formatToRupiah(form.other_cost)}</TD>
 					</tr>
 				</tbody>
 			</table>

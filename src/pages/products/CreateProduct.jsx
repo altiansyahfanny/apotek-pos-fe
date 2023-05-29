@@ -13,7 +13,7 @@ import { getAddProductFormState, resetForm, setForm } from '../../redux/reducer/
 import { resetErrors, setErrors } from '../../redux/reducer/validationSlice';
 import { MainLayout } from '../../templates';
 import { useNavigate } from 'react-router-dom';
-import { tranformForm } from '../../helper/createProduct';
+import { generateSKU, tranformForm } from '../../helper/createProduct';
 import { formatToRupiah } from '../../helper/currency';
 
 const preventCharactersOtherThanNumbers = (event) => {
@@ -74,19 +74,13 @@ const CreateProduct = () => {
 						/>
 					</FormInput>
 					<FormInput>
-						<FormInput.Label title={'Nama Supplier/Pabrik'} required={true} />
-						<FormInput.InputSelect
-							value={form.supplier_id}
-							name={'supplier_id'}
+						<FormInput.Label title={'Nama Supplier/Pabrik'} />
+						<FormInput.TextInput
+							required={true}
+							name={'factory_name'}
+							value={form.factory_name}
 							onChange={handleChange}
-						>
-							<FormInput.InputSelect.Option value={''}>Pilih Supplier</FormInput.InputSelect.Option>
-							{SUPPLIERS.map((supplier, index) => (
-								<FormInput.InputSelect.Option key={index} value={supplier.id}>
-									{supplier.name}
-								</FormInput.InputSelect.Option>
-							))}
-						</FormInput.InputSelect>
+						/>
 					</FormInput>
 					<FormInput>
 						<FormInput.Label title={'Kode Produk (SKU)'} required={true} />
@@ -101,7 +95,9 @@ const CreateProduct = () => {
 							</div>
 							<FormInput.SideButton
 								bgColor="bg-green_tea"
-								onClick={() => console.log('random sku')}
+								onClick={() =>
+									dispatch(setForm({ key: 'sku_code', value: generateSKU(form.name) }))
+								}
 							>
 								<FaRandom />
 							</FormInput.SideButton>

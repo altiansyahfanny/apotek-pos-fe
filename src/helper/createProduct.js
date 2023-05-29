@@ -1,6 +1,5 @@
 const tranformForm = (form) => {
 	const newForm = {
-		supplier_id: form.supplier_id,
 		product_category_id: form.product_category_id,
 		product_unit_id: form.product_unit_id,
 		rack_id: form.rack_id,
@@ -11,6 +10,7 @@ const tranformForm = (form) => {
 		name: form.name,
 		sku_code: form.sku_code,
 		barcode: form.barcode,
+		factory_name: form.factory_name,
 		active_substance: form.active_substance,
 		other_information: form.other_information,
 		alternative_prices: form.alternative_prices,
@@ -20,4 +20,12 @@ const tranformForm = (form) => {
 	return newForm;
 };
 
-export { tranformForm };
+const generateSKU = (name) => {
+	return name
+		.split(' ')
+		.map((name) => name.slice(0, 3))
+		.slice(0, 3)
+		.join('');
+};
+
+export { tranformForm, generateSKU };

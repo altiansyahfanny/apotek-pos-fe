@@ -32,6 +32,7 @@ import Rack from './pages/setting/Rack';
 import UserAccess from './pages/setting/UserAccess';
 import Warehouse from './pages/setting/Warehouse';
 import { DashLayout, ProductDetailLayout } from './templates';
+import TriggerClass from './components/TriggerClass';
 
 const Home = () => {
 	return <div>POS APOTIK</div>;
@@ -104,6 +105,7 @@ const App = () => {
 				pauseOnHover={false}
 				pauseOnFocusLoss={false}
 			/>
+			<TriggerClass />
 		</>
 	);
 };

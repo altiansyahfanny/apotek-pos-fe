@@ -1,6 +1,13 @@
 const formatToRupiah = (amount) => {
-	return new Intl.NumberFormat('id-ID').format(amount);
-	// return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+	return new Intl.NumberFormat('id-ID', {
+		style: 'currency',
+		currency: 'IDR',
+		minimumFractionDigits: 2,
+	}).format(amount);
 };
 
-export { formatToRupiah };
+const formatThousand = (amount) => {
+	return new Intl.NumberFormat('id-ID').format(amount);
+};
+
+export { formatToRupiah, formatThousand };

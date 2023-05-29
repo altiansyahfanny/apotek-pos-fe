@@ -47,6 +47,36 @@ const TextInput = React.forwardRef(
 		);
 	}
 );
+const TextArea = ({
+	type = 'text',
+	disabled = false,
+	value,
+	onChange,
+	name,
+	customError = false,
+	rows = 4,
+}) => {
+	let error = getValidationError(name);
+	if (customError) error = true;
+
+	return (
+		<div>
+			<textarea
+				className={`${error ? ' form-input-error' : 'form-input'}`}
+				type={type}
+				name={name}
+				value={value}
+				onChange={onChange}
+				disabled={disabled}
+				rows={rows}
+			/>
+
+			{error && typeof error !== 'boolean' && (
+				<p className="inline-block text-xs text-red-500">{error}</p>
+			)}
+		</div>
+	);
+};
 
 const InputSelect = ({ name, value, onChange, children, disabled, customError = false }) => {
 	let error = getValidationError(name);
@@ -109,6 +139,18 @@ const InputFile = ({ file_name, onFileUpload, accept }) => {
 	);
 };
 
+const Button = ({ children, bgColor = 'slate', onClick, type = 'button', disabled = false }) => {
+	return (
+		<button
+			type={type}
+			className={`grid place-content-center rounded px-3 cursor-pointer transition text-sm py-1.5 bg-${bgColor}-500 text-${bgColor}-50 hover:bg-${bgColor}-600 disabled:bg-${bgColor}-100 disabled:text-${bgColor}-500`}
+			onClick={onClick}
+			disabled={disabled}
+		>
+			{children}
+		</button>
+	);
+};
 const FormInput = ({ children, className = 'flex flex-col gap-1.5' }) => {
 	return <div className={className}>{children}</div>;
 };
@@ -118,7 +160,9 @@ InputSelect.Option = Option;
 FormInput.Label = Label;
 FormInput.InputSelect = InputSelect;
 FormInput.TextInput = TextInput;
+FormInput.TextArea = TextArea;
 FormInput.SideButton = SideButton;
 FormInput.InputFile = InputFile;
+FormInput.Button = Button;
 
 export default FormInput;

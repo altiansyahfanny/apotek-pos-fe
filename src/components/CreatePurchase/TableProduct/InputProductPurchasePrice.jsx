@@ -5,7 +5,7 @@ import {
 	calculateQty,
 	calculateSubtotal,
 } from '../../../helper/createPurchase';
-import { formatToRupiah } from '../../../helper/currency';
+import { formatThousand } from '../../../helper/currency';
 import { getValidationError } from '../../../helper/form';
 import { getAddPurchaseFormState, setForm } from '../../../redux/reducer/addPurchaseSlice';
 
@@ -25,6 +25,8 @@ const InputProductPurchasePrice = ({ index }) => {
 		preventCharactersOtherThanNumbers(event);
 		const product_purchase_price = event.target.value;
 		const newProducts = [...products];
+
+		console.log(product_purchase_price);
 
 		const total_qty = calculateQty(product.qty, product.qty_from_product_unit);
 		const product_price = calculateProductPrice(
@@ -48,7 +50,7 @@ const InputProductPurchasePrice = ({ index }) => {
 
 	return (
 		<input
-			value={formatToRupiah(product.product_purchase_price)}
+			value={formatThousand(product.product_purchase_price)}
 			onChange={onChange}
 			type="text"
 			className={`w-20 ${error ? 'form-input-table-error' : 'form-input-table'}`}

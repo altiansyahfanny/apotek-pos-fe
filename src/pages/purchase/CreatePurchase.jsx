@@ -7,12 +7,14 @@ import TableProduct from '../../components/CreatePurchase/TableProduct';
 import TableTotal from '../../components/CreatePurchase/TableTotal';
 import { PAYMENT_ACCOUNTS, SUPPLIERS, WAREHOUSES } from '../../data';
 import { tranformForm } from '../../helper/createPurchase';
-import { formatToRupiah } from '../../helper/currency';
+import { formatToRupiah, formatThousand } from '../../helper/currency';
 import { toastError, toastSuccess } from '../../helper/toast';
 import { useCreateInvoiceMutation } from '../../redux/api/invoiceApi';
 import { getAddPurchaseFormState, resetForm, setForm } from '../../redux/reducer/addPurchaseSlice';
 import { resetErrors, setErrors } from '../../redux/reducer/validationSlice';
 import { MainLayout } from '../../templates';
+import { HiOutlinePlus } from 'react-icons/hi';
+import InputSupplier from '../../components/CreatePurchase/InputSupplier';
 
 const preventCharactersOtherThanNumbers = (event) => {
 	event.target.value = event.target.value.replace(/[^0-9]/g, '');
@@ -26,6 +28,11 @@ const CreatePurchase = () => {
 
 	const onChange = (e) => {
 		const { name, value } = e.target;
+
+		if (name === 'payment_method') {
+			dispatch(setForm({ key: 'payment_account', value: '' }));
+			dispatch(setForm({ key: 'due_date', value: '' }));
+		}
 		dispatch(setForm({ key: name, value }));
 	};
 
@@ -46,10 +53,15 @@ const CreatePurchase = () => {
 
 	const [totalPrice, setTotalPrice] = useState(0);
 
+	console.log('totalPrice : ', totalPrice);
+
 	useEffect(() => {
 		if ([...form.products].length > 0) {
-			const total_price = [...form.products].reduce((prev, product) => prev + product.subtotal, 0);
-			setTotalPrice(total_price);
+			const total_price = [...form.products].reduce(
+				(prev, product) => prev + Number(product.subtotal),
+				0
+			);
+			setTotalPrice(total_price - form.cashback + form.other_cost);
 		} else {
 			setTotalPrice(0);
 		}
@@ -91,17 +103,7 @@ const CreatePurchase = () => {
 						onChange={onChange}
 					/>
 				</FormInput>
-				<FormInput>
-					<FormInput.Label title={'Supplier'} required={true} />
-					<FormInput.InputSelect value={form.supplier_id} name="supplier_id" onChange={onChange}>
-						<FormInput.InputSelect.Option value={''}>Pilih Supplier</FormInput.InputSelect.Option>
-						{SUPPLIERS.map((supplier, index) => (
-							<FormInput.InputSelect.Option key={index} value={supplier.id}>
-								{supplier.name}
-							</FormInput.InputSelect.Option>
-						))}
-					</FormInput.InputSelect>
-				</FormInput>
+				<InputSupplier />
 				<FormInput>
 					<FormInput.Label title={'Jenis Pembayaran'} required={true} />
 					<FormInput.InputSelect
@@ -136,8 +138,13 @@ const CreatePurchase = () => {
 				</FormInput>
 				<FormInput>
 					<FormInput.Label title={'Akun Pembayaran'} required={false} />
-					<FormInput.InputSelect disabled={disabledPaymentAccount} name={'payment_account'}>
-						<FormInput.InputSelect.Option value={''} onChange={onChange}>
+					<FormInput.InputSelect
+						disabled={disabledPaymentAccount}
+						name={'payment_account'}
+						value={form.payment_account}
+						onChange={onChange}
+					>
+						<FormInput.InputSelect.Option value={''}>
 							Pilih Akun Pembayaran
 						</FormInput.InputSelect.Option>
 						{PAYMENT_ACCOUNTS.map((payment_account, index) => (
@@ -182,7 +189,7 @@ const CreatePurchase = () => {
 					<FormInput.Label title={'Cashback/Diskon'} required={false} />
 					<FormInput.TextInput
 						type={'text'}
-						value={formatToRupiah(form.cashback)}
+						value={formatThousand(form.cashback)}
 						name="cashback"
 						onChange={onChangeNumber}
 					/>
@@ -191,7 +198,7 @@ const CreatePurchase = () => {
 					<FormInput.Label title={'Biaya Lainnya'} required={false} />
 					<FormInput.TextInput
 						type={'text'}
-						value={formatToRupiah(form.other_cost)}
+						value={formatThousand(form.other_cost)}
 						name="other_cost"
 						onChange={onChangeNumber}
 					/>
@@ -216,7 +223,7 @@ const CreatePurchase = () => {
 				<TableTotal />
 				<div className="grid place-content-center">
 					<span className="font-semibold text-3xl text-gray-700">
-						Total Rp. {totalPrice > 0 ? formatToRupiah(totalPrice + Number(form.other_cost)) : 0}
+						Total {formatToRupiah(totalPrice)}
 					</span>
 				</div>
 			</div>

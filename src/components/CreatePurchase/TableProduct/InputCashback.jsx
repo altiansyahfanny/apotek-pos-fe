@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddPurchaseFormState, setForm } from '../../../redux/reducer/addPurchaseSlice';
-import { formatToRupiah } from '../../../helper/currency';
+import { formatThousand } from '../../../helper/currency';
 import {
 	calculateProductPrice,
 	calculateQty,
@@ -57,7 +57,7 @@ const InputCashback = ({ product, index }) => {
 
 	return (
 		<input
-			value={formatToRupiah(product.cashback)}
+			value={formatThousand(product.cashback)}
 			onChange={onChange}
 			type="text"
 			className={`w-20 form-input-table`}

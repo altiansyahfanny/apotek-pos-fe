@@ -3,18 +3,23 @@ const calculateQty = (qty, qty_from_product_unit) => {
 };
 const calculateProductPrice = (product_purchase_price, cashback, tax, tax_category) => {
 	if (tax_category == 2) {
+		return Number(
+			product_purchase_price - cashback + ((product_purchase_price - cashback) * tax) / 100
+		).toFixed(2);
 		return Math.round(
 			product_purchase_price - cashback + ((product_purchase_price - cashback) * tax) / 100
 		);
 	}
+	return Number(product_purchase_price - cashback).toFixed(2);
 	return Math.round(product_purchase_price - cashback);
 };
 const calculateSubtotal = (total_qty, product_price) => {
+	return Number(total_qty * product_price).toFixed(2);
 	return Math.round(total_qty * product_price);
 };
 
 const tranformForm = (form) => {
-	// console.log('form : ', form);
+	console.log('form : ', form);
 
 	const products = form.products;
 	const newProducts = products.map((product) => {

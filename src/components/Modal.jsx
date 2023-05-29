@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 // import { resetErrors } from '../redux/reducers/validationSlice';
 
-const Modal = ({ title, isOpen, closeModal, children }) => {
+const Modal = ({ title, isOpen, closeModal, children, width = '2xl' }) => {
 	const dispatch = useDispatch();
 	const handleCloseModal = () => {
 		closeModal();
@@ -37,11 +37,13 @@ const Modal = ({ title, isOpen, closeModal, children }) => {
 								leaveFrom="opacity-100 scale-100"
 								leaveTo="opacity-0 scale-95"
 							>
-								<Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all">
+								<Dialog.Panel
+									className={`w-full max-w-${width} transform overflow-hidden rounded-lg bg-white p-6 text-left align-middle shadow-xl transition-all`}
+								>
 									<div className="flex items-center justify-between">
 										<Dialog.Title
 											as="h3"
-											className="text-xl font-medium leading-6 text-gray-900 font-pasicico"
+											className="text-lg font-medium leading-6 text-gray-900 font-pasicico"
 										>
 											{title}
 										</Dialog.Title>
