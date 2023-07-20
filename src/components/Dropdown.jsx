@@ -5,8 +5,8 @@ const Option = ({ children, isActive, action }) => {
 	return (
 		<button
 			type="button"
-			className={`w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 ${
-				!isActive ? 'hover:bg-green_tea hover:text-white' : 'bg-green_tea text-white'
+			className={`w-full flex items-center gap-2 px-4 py-2 text-sm text-primary ${
+				!isActive ? 'hover:bg-primaryToHover' : 'bg-primary text-white'
 			} `}
 			role="menuitem"
 			onClick={action}
@@ -42,7 +42,7 @@ const Dropdown = ({ labelIcon, children }) => {
 			<div className="relative inline-block text-left">
 				<button
 					type="button"
-					className="inline-flex justify-center w-full p-[0.55rem] bg-secondary hover:bg-secondary_on_hover transition rounded text-white focus:outline-none"
+					className="inline-flex justify-center w-full p-[0.55rem] bg-primary hover:bg-primaryOnHover transition rounded text-white focus:outline-none"
 					id="dropdown-button"
 					onClick={toggleDropdown}
 				>

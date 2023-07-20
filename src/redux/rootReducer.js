@@ -20,21 +20,30 @@ import addProductSlice from './reducer/addProductSlice';
 import addPurchaseSlice from './reducer/addPurchaseSlice';
 import { apiSlice } from './api/apiSlice';
 import validationSlice from './reducer/validationSlice';
+import formInputSlice from './reducer/formInputSlice';
+import componentSlice from './reducer/componentSlice';
+import productPurchaseSlice from './reducer/productPurchaseSlice';
+import productSaleSlice from './reducer/productSaleSlice';
+import authSlice from './reducer/authSlice';
 
 const rootReducer = combineReducers({
 	[apiSlice.reducerPath]: apiSlice.reducer,
+	auth: authSlice,
+	component: componentSlice,
 	product: productSlice,
 	add_product: addProductSlice,
 	product_expired: productExpiredSlice,
 	product_detail: productDetailSlice,
+	product_purchase: productPurchaseSlice,
+	product_sale: productSaleSlice,
 	prescription: prescriptionSlice,
 	concoction: concoctionSlice,
 	sale: saleSlice,
 	purchase: purchaseSlice,
 	consignment: consignmentSlice,
 	customer: customerSlice,
-	user: userSlice,
 	doctor: doctorSlice,
+	user: userSlice,
 	supplier: supplierSlice,
 	user_access: userAccessSlice,
 	product_unit: productUnitSlice,
@@ -43,6 +52,7 @@ const rootReducer = combineReducers({
 	pos: posSlice,
 	add_purchase: addPurchaseSlice,
 	validation: validationSlice,
+	form_input: formInputSlice,
 });
 
 export default rootReducer;

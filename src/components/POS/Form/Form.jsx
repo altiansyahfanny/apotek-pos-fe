@@ -1,126 +1,92 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getForm, setForm } from '../../../redux/reducer/posSlice';
-import { countSubtotal } from '../../../helper/pos';
-import { formatToRupiah } from '../../../helper/currency';
-
-const Label = ({ title }) => <label className="text-sm text-gray-700">{title}</label>;
-
-const TextInput = ({
-	label,
-	inline = true,
-	type = 'text',
-	disabled = false,
-	value,
-	onChange,
-	name,
-}) => {
-	return (
-		<div className={`flex ${inline ? 'items-center' : 'flex-col gap-y-1.5'}`}>
-			<div className={`${inline ? 'w-7/12' : 'w-full'}`}>
-				<Label title={label} />
-			</div>
-			<div className={`${inline ? 'w-5/12' : 'w-full'}`}>
-				<input
-					className={`w-full border-2 border-gray-300 text-gray-700 text-sm rounded px-2 py-1.5 focus:outline-none focus:ring-0 focus:border-green_tea`}
-					type={type}
-					name={name}
-					value={value}
-					onChange={onChange}
-					disabled={disabled}
-				/>
-			</div>
-		</div>
-	);
-};
-
-const InputSelect = ({ children, label }) => {
-	return (
-		<div>
-			<Label title={label} />
-			<select
-				className={`w-full mt-1.5 border-2 border-gray-300 text-gray-700 text-sm rounded px-2 py-1.5 focus:outline-none focus:ring-0 focus:border-green_tea`}
-			>
-				{children}
-			</select>
-		</div>
-	);
-};
-
-const Button = ({ bgColor, text }) => {
-	return <button className={`${bgColor} rounded  w-full p-2 text-sm text-white`}>{text}</button>;
-};
+import { formatThousand } from '../../../helper/currency';
+import { countSubtotal, tranformForm } from '../../../helper/pos';
+import { toastError, toastSuccess } from '../../../helper/toast';
+import { useCreateSaleMutation } from '../../../redux/api/saleApi';
+import { getForm, resetForm, setForm } from '../../../redux/reducer/posSlice';
+import { resetErrors, setErrors } from '../../../redux/reducer/validationSlice';
+import InputWarehouse from '../../InputWarehouse';
+import FormInput from './FormInput';
+import InputCustomer from './InputCustomer';
+import InputDiscount from './InputDiscount';
+import InputDoctor from './InputDoctor';
+import InputEmbalaseFee from './InputEmbalaseFee';
+import InputSellingVia from './InputSellingVia';
+import InputServiceFee from './InputServiceFee';
+import InputShippingCost from './InputShippingCost';
+import InputTax from './InputTax';
+import PaidSaleButton from './PaidSaleButton';
+import PendingSaleButton from './PendingSaleButton';
 
 const Form = () => {
 	const dispatch = useDispatch();
-	const { products, service_fee, embalase_fee, shipping_costs, discount } = useSelector(getForm);
+	const form = useSelector(getForm);
+	const { date, warehouse_id } = useSelector(getForm);
+
+	const [create, { isLoading }] = useCreateSaleMutation();
 
 	const handleChange = (e) => {
-		const { value, name } = e.target;
-		const tempValue = Number(value);
+		const { name, value } = e.target;
+		dispatch(setForm({ key: name, value }));
+	};
 
-		if (tempValue <= 0 || Number.isNaN(tempValue)) {
-			return dispatch(setForm({ key: name, value: 0 }));
+	const handlePending = async () => {
+		const data = tranformForm(form);
+
+		if (data.status === 3) return toastError('Sudah Penjualan Tertunda');
+
+		// return console.log('form : ', form);
+
+		dispatch(resetErrors());
+
+		try {
+			const response = await create({ ...data, status: 3 }).unwrap();
+			toastSuccess('Penjulan Ditunda');
+			dispatch(resetForm());
+		} catch (error) {
+			if (error.status === 422) {
+				toastError('Validasi Error!');
+				return dispatch(setErrors(error.data.errors));
+			}
+			toastError(error.data.message);
+			console.log('error : ', error);
 		}
-		dispatch(setForm({ key: name, value: Number(value) }));
 	};
 
 	return (
 		<div>
 			<div className="flex flex-col gap-y-4">
-				<TextInput
+				<FormInput.TextInput
 					label={'Subtotal (Rp)'}
 					disabled={true}
-					value={formatToRupiah(countSubtotal(products))}
+					value={formatThousand(countSubtotal(form.products))}
+					onChange={() => {}}
 				/>
-				<TextInput
-					label={'Biaya Layanan (Rp)'}
-					value={service_fee}
+				<InputServiceFee />
+				<InputEmbalaseFee />
+				<InputShippingCost />
+				<InputDiscount />
+				<InputTax />
+				<InputSellingVia />
+				<FormInput.TextInput
+					label={'Tanggal Transaksi'}
+					inline={false}
+					type="datetime-local"
+					value={date}
+					name={'date'}
 					onChange={handleChange}
-					name={'service_fee'}
 				/>
-				<TextInput
-					label={'Biaya Embalase (Rp)'}
-					value={embalase_fee}
-					onChange={handleChange}
-					name={'embalase_fee'}
-				/>
-				<TextInput
-					label={'Biaya Pengiriman (Rp)'}
-					value={shipping_costs}
-					onChange={handleChange}
-					name={'shipping_costs'}
-				/>
-				<TextInput label={'Diskon'} value={discount} onChange={handleChange} name={'discount'} />
-				<InputSelect label={'PPN (%)'}>
-					<option value={0}>Tidak Dikenakan PPN</option>
-					<option value={11}>11</option>
-					<option value={12}>12</option>
-					<option value={13}>13</option>
-				</InputSelect>
-				<InputSelect label={'Penjualan Via'}>
-					<option value={'Offline'}>Offline</option>
-					<option value={'GoApotik'}>GoApotik</option>
-					<option value={'GrabHealth'}>GrabHealth</option>
-					<option value={'GrabMart'}>GrabMart</option>
-					<option value={'Halodoc'}>Halodoc</option>
-					<option value={'KlikDokter'}>KlikDokter</option>
-					<option value={'Shopee'}>Shopee</option>
-					<option value={'Tiktok'}>Tiktok</option>
-					<option value={'Tokopedia'}>Tokopedia</option>
-					<option value={'Whatsapp'}>Whatsapp</option>
-					<option value={'Lainya'}>Lainya</option>
-				</InputSelect>
-				<TextInput label={'Tanggal Transaksi'} inline={false} type="datetime-local" />
-				<InputSelect label={'Gudang'}>
-					<option value={'Gudang Utama'}>Gudang Utama</option>
-					<option value={'Gudang Kelayan'}>Gudang Kelayan</option>
-				</InputSelect>
+				<InputCustomer />
+				<InputDoctor />
+				<InputWarehouse {...{ warehouse_id, setForm }} />
 				<div className="flex flex-col gap-2">
-					<Button text={'Bayar'} bgColor="bg-blue-500" />
-					<Button text={'Tunda'} bgColor="bg-gray-500" />
-					<Button text={'Penjualan Tertunda'} bgColor="bg-orange-500" />
-					<Button text={'Tebus Resep'} bgColor="bg-green_tea" />
+					<div className="grid grid-cols-2 gap-2">
+						<FormInput.Button text={'Tunda'} bgColor="bg-emerald-500" onClick={handlePending} />
+						<PaidSaleButton />
+						<PendingSaleButton />
+						<FormInput.Button text={'Tebus Resep'} bgColor="bg-teal-800" />
+					</div>
 				</div>
 			</div>
 		</div>

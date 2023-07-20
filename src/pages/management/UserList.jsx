@@ -1,26 +1,39 @@
 import React from 'react';
-import { MainLayout } from '../../templates';
-import FilterAction from '../../components/User/FilterAction';
+import { useSelector } from 'react-redux';
+import { Loader } from '../../components';
 import Limiter from '../../components/ProductList/Limiter';
 import SearchInput from '../../components/ProductList/SearchInput';
-import { getUserState, setKeySearch, setLimit } from '../../redux/reducer/userSlice';
+import FilterAction from '../../components/User/FilterAction';
 import TableContent from '../../components/User/TableContent';
-import { useSelector } from 'react-redux';
+import { useGetUsersWithPaginationQuery } from '../../redux/api/userApi';
+import { getUserQueryState, setQuery } from '../../redux/reducer/userSlice';
+import { MainLayout } from '../../templates';
 
 const UserList = () => {
-	const { limit, key_search } = useSelector(getUserState);
+	const { limit, key_search, current_page } = useSelector(getUserQueryState);
+
+	const { data, isSuccess, isLoading, isError, error } = useGetUsersWithPaginationQuery({
+		per_page: limit,
+		key_search,
+		current_page,
+	});
+
+	console.log('data : ', data);
 
 	let content;
-
-	content = <TableContent />;
+	if (isLoading) content = <Loader />;
+	if (isError) content = <p>{error.data.message ?? 'Error'}</p>;
+	if (isSuccess) {
+		content = <TableContent data={data} />;
+	}
 	return (
 		<MainLayout title="Daftar Pengguna">
 			<MainLayout.Header title={'Daftar Pengguna'}>
 				<FilterAction />
 			</MainLayout.Header>
 			<MainLayout.LimiterContainer>
-				<Limiter {...{ limit, setLimit }} />
-				<SearchInput {...{ value: key_search, action: setKeySearch }} />
+				<Limiter {...{ limit, setQuery }} />
+				<SearchInput {...{ value: key_search, action: setQuery }} />
 			</MainLayout.LimiterContainer>
 
 			{content}

@@ -47,7 +47,7 @@ const TableProduct = () => {
 			</div>
 			<div className=" pb-4">
 				<table className="w-full text-xs text-gray-500">
-					<thead className="bg-secondary text-white">
+					<thead className="bg-primary text-white">
 						<tr className="">
 							<TH title={'No.'} textAlign="text-center" />
 							<TH title={'Produk'} width="w-full" />

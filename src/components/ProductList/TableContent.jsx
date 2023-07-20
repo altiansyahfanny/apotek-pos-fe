@@ -1,15 +1,30 @@
 import Tippy from '@tippyjs/react';
 import React from 'react';
 import { IoMdOptions } from 'react-icons/io';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import 'tippy.js/dist/tippy.css'; // optional
-import { formatToRupiah } from '../../helper/currency';
-import Pagination from '../Pagination';
+import { formatThousand, formatToRupiah } from '../../helper/currency';
+import { getProductQueryState, setQuery } from '../../redux/reducer/productSlice';
 import Table from '../Table';
+import { numberTabelWithPagination } from '../../helper/table';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { setAllForm } from '../../redux/reducer/addProductSlice';
+import { tranformFormForEdit } from '../../helper/createProduct';
 
 const TableContent = ({ data }) => {
-	console.log('products : ', data);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { limit, current_page } = useSelector(getProductQueryState);
 
+	const onClickEdit = (product) => {
+		// console.log('product : ', product);
+		const newProduct = tranformFormForEdit(product);
+		console.log('product : ', newProduct);
+
+		dispatch(setAllForm(newProduct));
+		navigate('create');
+	};
 	return (
 		<div className="mt-2">
 			<Table>
@@ -19,35 +34,40 @@ const TableContent = ({ data }) => {
 					<Table.THD textAlign="center">Kategori</Table.THD>
 					<Table.THD textAlign="center">Stok</Table.THD>
 					<Table.THD textAlign="center">Satuan</Table.THD>
-					<Table.THD textAlign="right">Harga Beli</Table.THD>
-					<Table.THD textAlign="right">Harga Jual</Table.THD>
+					<Table.THD textAlign="">Harga Beli</Table.THD>
+					<Table.THD textAlign="">Harga Jual</Table.THD>
 					<Table.THD textAlign="center">Status</Table.THD>
 					<Table.THD textAlign="center">Aksi</Table.THD>
 				</Table.TH>
 				<Table.TB>
-					{data.map((product, index) => (
+					{data.data.map((product, index) => (
 						<Table.TBR key={index}>
-							<Table.TBD textAlign="center">{index + 1}</Table.TBD>
+							<Table.TBD textAlign="center">
+								{numberTabelWithPagination(index, limit, current_page)}
+							</Table.TBD>
 							<Table.TBD>
-								<Link to={'1/detail'}>{product.name}</Link>{' '}
+								<Link to={`${product.id}/detail`}>{product.name}</Link>{' '}
 							</Table.TBD>
 							<Table.TBD textAlign="center">{product.product_category.name}</Table.TBD>
-							<Table.TBD textAlign="center">{product.stock_amount}</Table.TBD>
+							<Table.TBD textAlign="center">{formatThousand(product.stock_amount)}</Table.TBD>
 							<Table.TBD textAlign="center">{product?.product_unit?.name ?? '-'}</Table.TBD>
-							<Table.TBD textAlign="right">
+							<Table.TBD textAlign="">
 								{formatToRupiah(product.selling_price ?? product.capital_price)}
 							</Table.TBD>
 							<Table.TBD textAlign="right">
-								<div className="flex flex-col items-center gap-2 justify-end">
-									<Tippy content="Harga Utama" disabled={false}>
-										<span className="cursor-pointer">{formatToRupiah(product.price)}</span>
+								<div className="flex flex-col items-start">
+									<Tippy content="Harga Utama" disabled={false} className="text-center">
+										<span className="cursor-pointer text-right">
+											{formatToRupiah(product.price)}
+										</span>
 									</Tippy>
 									{product.alternative_prices.map((alternative_prices, index) => (
 										<Tippy
-											content={alternative_prices.alternative_price_category.name}
+											key={index}
+											content={`${alternative_prices.alternative_price_category.name} \u2265 ${alternative_prices.minimum_item} item`}
 											disabled={false}
 										>
-											<span className="cursor-pointer" key={index}>
+											<span className="cursor-pointer text-right">
 												{formatToRupiah(alternative_prices.price)}
 											</span>
 										</Tippy>
@@ -61,18 +81,20 @@ const TableContent = ({ data }) => {
 								/>
 							</Table.TBD>
 							<Table.TBD textAlign="center">
-								<div className="flex justify-center p-1 cursor-pointer">
-									<IoMdOptions />
-								</div>
+								<Table.ButtonAction labelIcon={<IoMdOptions />}>
+									<Table.ButtonAction.Option
+										icon={<AiOutlineArrowRight size={18} />}
+										text={'Edit'}
+										action={() => onClickEdit(product)}
+									/>
+								</Table.ButtonAction>
 							</Table.TBD>
 						</Table.TBR>
 					))}
 				</Table.TB>
 			</Table>
 
-			<div className="mt-1">
-				<Pagination />
-			</div>
+			<Table.Pagination {...{ data, current_page, setQuery, limit }} />
 		</div>
 	);
 };

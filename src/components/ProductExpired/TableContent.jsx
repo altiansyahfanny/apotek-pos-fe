@@ -2,7 +2,7 @@ import React from 'react';
 import Pagination from '../Pagination';
 import Table from '../Table';
 
-const ButtonOpname = ({ status, bg = 'bg-green_tea', onClick }) => {
+const ButtonOpname = ({ status, bg = 'bg-lime-500', onClick }) => {
 	return (
 		<button
 			type="button"
@@ -62,10 +62,6 @@ const TableContent = () => {
 						))}
 				</Table.TB>
 			</Table>
-
-			<div className="mt-1">
-				<Pagination />
-			</div>
 		</div>
 	);
 };

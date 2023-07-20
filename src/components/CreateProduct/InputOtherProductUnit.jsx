@@ -82,7 +82,11 @@ const InputOtherProductUnit = () => {
 
 	const handleDeleteOtherProductUnit = (index) => {
 		const new_product_unit = [...other_product_units];
-		new_product_unit.splice(index, 1);
+		if (new_product_unit[index].is_edit) {
+			new_product_unit[index] = { ...new_product_unit[index], is_delete: true };
+		} else {
+			new_product_unit.splice(index, 1);
+		}
 		dispatch(setForm({ key: 'other_product_units', value: new_product_unit }));
 	};
 
@@ -92,29 +96,35 @@ const InputOtherProductUnit = () => {
 			product_unit_id: '',
 			number_of_other_product_units: 0,
 			number_of_product_units: 0,
+			is_delete: false,
+			is_edit: false,
 		});
 		dispatch(setForm({ key: 'other_product_units', value: new_product_unit }));
 	};
 
 	return (
 		<div className="mt-1 flex flex-col gap-1.5">
-			{other_product_units.map((product_unit, index) => (
-				<div key={index} className="flex gap-1.5 items-start">
-					<div className="grid grid-cols-3 gap-1.5 items-start">
-						<InputNumberOfOtherProductUnits {...{ index, product_unit, handleChange }} />
-						<InputProductUnitId {...{ index, product_unit, handleChange }} />
-						<InputNumberOfProductUnits
-							{...{ index, product_unit, handleChange, selectedProductUnit }}
-						/>
-					</div>
-					<InputGroup.Button onClick={() => handleDeleteOtherProductUnit(index)}>
-						<BsTrash />
-					</InputGroup.Button>
-				</div>
-			))}
+			{other_product_units.map((product_unit, index) => {
+				if (!product_unit.is_delete) {
+					return (
+						<div key={index} className="flex gap-1.5 items-start">
+							<div className="grid grid-cols-3 gap-1.5 items-start">
+								<InputNumberOfOtherProductUnits {...{ index, product_unit, handleChange }} />
+								<InputProductUnitId {...{ index, product_unit, handleChange }} />
+								<InputNumberOfProductUnits
+									{...{ index, product_unit, handleChange, selectedProductUnit }}
+								/>
+							</div>
+							<InputGroup.Button onClick={() => handleDeleteOtherProductUnit(index)}>
+								<BsTrash />
+							</InputGroup.Button>
+						</div>
+					);
+				}
+			})}
 			<div>
 				<button
-					className="bg-green_tea text-white text-sm rounded px-3 text-center py-1.5"
+					className="bg-lime-500 text-white text-sm rounded px-3 text-center py-1.5"
 					onClick={onClick}
 				>
 					Tambah Satuan Lainnya

@@ -8,11 +8,9 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: '#233c46',
-				secondary: '#5e7d8a',
-				secondary_on_hover: '#506a75',
-				green_tea: '#88c241',
-				green_tea_hover: '#97d44c',
+				primary: '#212529',
+				primaryOnHover: '#3c4145',
+				primaryToHover: '#e5e7eb',
 			},
 
 			// fontFamily: {

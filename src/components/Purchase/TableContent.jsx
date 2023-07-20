@@ -62,10 +62,6 @@ const TableContent = ({ data }) => {
 					))}
 				</Table.TB>
 			</Table>
-
-			<div className="mt-1">
-				<Pagination />
-			</div>
 		</div>
 	);
 };

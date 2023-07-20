@@ -53,8 +53,6 @@ const CreatePurchase = () => {
 
 	const [totalPrice, setTotalPrice] = useState(0);
 
-	console.log('totalPrice : ', totalPrice);
-
 	useEffect(() => {
 		if ([...form.products].length > 0) {
 			const total_price = [...form.products].reduce(
@@ -74,7 +72,7 @@ const CreatePurchase = () => {
 		const data = { ...tranformForm(form), total_amount: totalPrice };
 
 		console.log('data : ', data);
-		return;
+		// return;
 
 		try {
 			const response = await create(data).unwrap();
@@ -230,7 +228,7 @@ const CreatePurchase = () => {
 			<hr className="my-8" />
 			<div className="flex justify-end">
 				<button
-					className="bg-green_tea text-sm text-white px-5 py-1.5 rounded hover:bg-secondary transition"
+					className="bg-lime-500 text-sm text-white px-5 py-1.5 rounded hover:bg-primary transition"
 					onClick={handleSubmit}
 				>
 					Simpan

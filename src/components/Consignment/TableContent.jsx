@@ -3,10 +3,10 @@ import Pagination from '../Pagination';
 import Table from '../Table';
 import { IoMdOptions } from 'react-icons/io';
 
-const StatusBadge = ({ status = 'Dijual', bg = 'bg-green_tea' }) => {
+const StatusBadge = ({ status = 'Dijual', bg = 'bg-lime-500' }) => {
 	return (
 		<span
-			className={`${bg} text-white text-[0.6rem] px-2 py-0.5 rounded group-hover:bg-white group-hover:text-green_tea`}
+			className={`${bg} text-white text-[0.6rem] px-2 py-0.5 rounded group-hover:bg-white group-hover:text-lime-500`}
 		>
 			{status}
 		</span>
@@ -58,10 +58,6 @@ const TableContent = () => {
 						))}
 				</Table.TB>
 			</Table>
-
-			<div className="mt-1">
-				<Pagination />
-			</div>
 		</div>
 	);
 };

@@ -8,7 +8,7 @@ import InputOtherProductUnit from './InputOtherProductUnit';
 
 const InputProductUnit = () => {
 	const dispatch = useDispatch();
-	const { product_unit_id, other_product_units } = useSelector(getAddProductFormState);
+	const { product_unit_id, other_product_units, is_edit } = useSelector(getAddProductFormState);
 
 	const onChange = (e) => {
 		const { value, name } = e.target;
@@ -27,6 +27,7 @@ const InputProductUnit = () => {
 						name={'product_unit_id'}
 						value={product_unit_id}
 						onChange={onChange}
+						disabled={is_edit}
 					>
 						<FormInput.InputSelect.Option value={''}>
 							Pilih Satuan Produk
@@ -39,7 +40,7 @@ const InputProductUnit = () => {
 					</FormInput.InputSelect>
 				</div>
 				<FormInput.SideButton
-					bgColor="bg-green_tea"
+					bgColor="bg-lime-500"
 					onClick={() => console.log('other_product_units: ', other_product_units)}
 				>
 					<HiOutlinePlus />

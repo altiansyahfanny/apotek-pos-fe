@@ -5,7 +5,7 @@ import Table from '../Table';
 
 const StatusBadge = () => {
 	return (
-		<span className="bg-green_tea text-white text-[0.6rem] px-2 py-0.5 rounded group-hover:bg-white group-hover:text-green_tea">
+		<span className="bg-lime-500 text-white text-[0.6rem] px-2 py-0.5 rounded group-hover:bg-white group-hover:text-lime-500">
 			Dijual
 		</span>
 	);
@@ -38,10 +38,6 @@ const TableContent = () => {
 						))}
 				</Table.TB>
 			</Table>
-
-			<div className="mt-1">
-				<Pagination />
-			</div>
 		</div>
 	);
 };

@@ -1,36 +1,38 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getForm, setForm } from '../../redux/reducer/posSlice';
-import InputSelect from './InputSelect';
+import FormInputTable from '../FormInputTabel';
 
-const InputProductUnit = ({ product, index }) => {
+const InputProductUnit = ({ index }) => {
 	const dispatch = useDispatch();
 	const { products } = useSelector(getForm);
+	const { product_units, product_unit_type, qty, price } = products[index];
 
-	const handleChangeProductUnit = (e, product_units, index) => {
-		const value = Number(e.target.value);
-
-		const selected = product_units.find(
-			(product_unit) => Number(product_unit.product_unit_id) === value
-		);
-
-		const form = [...products];
-		form[index] = {
-			...form[index],
-			price: selected.price,
-			product_subtotal: form[index].product_qty * selected.price,
+	const onClickOption = (product_unit) => {
+		const newProducts = [...products];
+		newProducts[index] = {
+			...newProducts[index],
+			qty_from_product_unit: product_unit.number_of_product_units,
+			product_subtotal: product_unit.number_of_product_units * qty * price,
+			product_unit_type: product_unit.name,
+			product_unit_id: product_unit.id,
 		};
-
-		dispatch(setForm({ key: 'products', value: form }));
+		dispatch(setForm({ key: 'products', value: newProducts }));
 	};
+
 	return (
-		<InputSelect onChange={(e) => handleChangeProductUnit(e, product.product_units, index)}>
-			{product.product_units.map((product_unit, index) => (
-				<option key={index} value={product_unit.product_unit_id}>
-					{product_unit.product_unit_name}
-				</option>
+		<FormInputTable.InputSelect
+			className={'w-28'}
+			value={product_unit_type ?? 'Pilih Satuan'}
+			index={index}
+			name={'qty'}
+		>
+			{product_units.map((product_unit, index) => (
+				<FormInputTable.Option key={index} onClick={() => onClickOption(product_unit)}>
+					{`${product_unit.name} (${product_unit.number_of_product_units})`}
+				</FormInputTable.Option>
 			))}
-		</InputSelect>
+		</FormInputTable.InputSelect>
 	);
 };
 

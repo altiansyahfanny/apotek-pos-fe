@@ -9,6 +9,11 @@ export const supplierApi = apiSlice.injectEndpoints({
 			},
 			providesTags: ['Supplier'],
 		}),
+		getSuppliersWithPagination: builder.query({
+			query: ({ per_page, current_page, key_search }) =>
+				`supplier/pagination?current_page=${current_page}&per_page=${per_page}&key_search=${key_search}`,
+			providesTags: ['Supplier'],
+		}),
 		createSupplier: builder.mutation({
 			query: (data) => ({
 				url: 'supplier',
@@ -17,7 +22,20 @@ export const supplierApi = apiSlice.injectEndpoints({
 			}),
 			invalidatesTags: ['Supplier'],
 		}),
+		updateSupplier: builder.mutation({
+			query: (data) => ({
+				url: 'supplier',
+				method: 'PATCH',
+				body: data,
+			}),
+			invalidatesTags: ['Supplier'],
+		}),
 	}),
 });
 
-export const { useCreateSupplierMutation, useGetSuppliersQuery } = supplierApi;
+export const {
+	useCreateSupplierMutation,
+	useGetSuppliersQuery,
+	useGetSuppliersWithPaginationQuery,
+	useUpdateSupplierMutation,
+} = supplierApi;

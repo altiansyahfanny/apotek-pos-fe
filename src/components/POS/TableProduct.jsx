@@ -22,21 +22,21 @@ const TD = ({ children, textAlign = 'text-left' }) => (
 );
 
 const TableProduct = () => {
-	const { products, is_custom_price } = useSelector(getForm);
+	const { products } = useSelector(getForm);
 
 	return (
 		<div>
 			{products.length > 0 && (
-				<table className="w-full text-xs text-gray-500 rounded overflow-hidden">
-					<thead className="bg-secondary text-white">
+				<table className="w-full text-xs text-gray-500 border">
+					<thead className="bg-primary text-white">
 						<tr className="">
-							<TH title={'Product name'} width="w-full" />
+							<TH title={'Nama Produk'} width="w-full" />
 							<TH title={'No. Batch'} />
 							<TH title={'Qty'} />
 							<TH title={'Satuan'} />
 							<TH title={'Harga Alternatif'} />
-							<TH title={'Harga Jual'} textAlign="text-right" />
-							<TH title={'Subtotal'} textAlign="text-right" />
+							<TH title={'Harga Jual'} />
+							<TH title={'Subtotal'} />
 							<TH title={'Aksi'} textAlign="text-center" />
 						</tr>
 					</thead>
@@ -44,11 +44,13 @@ const TableProduct = () => {
 						{products.map((product, index) => (
 							<tr
 								key={index}
-								className="bg-whitw border-b dark:bg-gray-800 dark:border-gray-700 items-start "
+								className={`bg-white ${
+									products.length - 1 !== index && 'border-b'
+								} dark:bg-gray-800 dark:border-gray-700 items-start`}
 							>
 								<TD>{product.name}</TD>
 								<TD>
-									<InputBatch />
+									<InputBatch {...{ index }} />
 								</TD>
 								<TD>
 									<InputQty {...{ index }} />
@@ -59,10 +61,14 @@ const TableProduct = () => {
 								<TD>
 									<InputAlternativePrice {...{ index }} />
 								</TD>
-								<TD textAlign="text-right">
-									{is_custom_price ? <InputPrice {...{ index }} /> : formatToRupiah(product.price)}
+								<TD>
+									{product.is_custom_price ? (
+										<InputPrice {...{ index }} />
+									) : (
+										formatToRupiah(product.price)
+									)}
 								</TD>
-								<TD textAlign="text-right">{formatToRupiah(product.product_subtotal)}</TD>
+								<TD>{formatToRupiah(product.product_subtotal)}</TD>
 								<TD textAlign="text-center">
 									<ButtonDeleteRow {...{ index }} />
 								</TD>

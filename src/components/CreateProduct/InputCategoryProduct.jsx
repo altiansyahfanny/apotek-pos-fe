@@ -6,7 +6,7 @@ import FormInput from '../FormInput';
 
 const InputCategoryProduct = () => {
 	const dispatch = useDispatch();
-	const { product_category_id } = useSelector(getAddProductFormState);
+	const { product_category_id, is_edit } = useSelector(getAddProductFormState);
 
 	const onChange = (e) => {
 		const { value, name } = e.target;
@@ -20,6 +20,7 @@ const InputCategoryProduct = () => {
 				name={'product_category_id'}
 				value={product_category_id}
 				onChange={onChange}
+				disabled={is_edit}
 			>
 				<option value={''}>Pilih Kategori Produk</option>
 				{PRODUCT_CATEGORIES.map((product_category, index) => (

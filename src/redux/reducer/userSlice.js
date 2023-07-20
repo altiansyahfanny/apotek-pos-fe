@@ -1,25 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-	limit: 10,
-	key_search: '',
+	query: {
+		limit: 10,
+		current_page: 1,
+		key_search: '',
+	},
+	modal_dialog: {
+		modal_add_is_open: false,
+	},
 };
 
 const userSlice = createSlice({
 	name: 'user',
 	initialState,
 	reducers: {
-		setLimit: (state, actions) => {
-			state.limit = Number(actions.payload);
+		setQuery: (state, actions) => {
+			state.query = { ...state.query, [actions.payload.key]: actions.payload.value };
 		},
-		setKeySearch: (state, actions) => {
-			state.key_search = actions.payload;
+		setModalDialog: (state, actions) => {
+			state.modal_dialog = { ...state.modal_dialog, [actions.payload.key]: actions.payload.value };
 		},
 	},
 });
 
-export const { setLimit, setKeySearch } = userSlice.actions;
+export const { setQuery, setModalDialog } = userSlice.actions;
 
 export default userSlice.reducer;
 
 export const getUserState = (state) => state.user;
+export const getUserQueryState = (state) => state.user.query;
+export const getUserModalState = (state) => state.user.modal_dialog;

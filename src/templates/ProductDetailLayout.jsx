@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import MainLayout from './MainLayout';
-import { FilterWarehouse } from '../components';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getProductDetailState, setWarehouse } from '../redux/reducer/productDetailSlice';
-import { FaWarehouse } from 'react-icons/fa';
+import { NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { FilterWarehouse } from '../components';
+import {
+	getProductDetailQueryState,
+	getProductDetailState,
+} from '../redux/reducer/productDetailSlice';
+import { setQuery } from '../redux/reducer/productSlice';
+import MainLayout from './MainLayout';
+import { useGetProductByIdQuery } from '../redux/api/productApi';
 
 const LINKS = [
 	{ name: 'Rincian Produk', isActive: true, to: 'detail' },
@@ -23,8 +27,8 @@ const NavigationLink = ({ to, name }) => {
 			className={({ isActive }) =>
 				`flex-1 grid place-content-center border ${
 					isActive
-						? 'bg-green_tea text-white border-green_tea'
-						: 'bg-white text-gray-700 hover:bg-green_tea hover:text-white'
+						? 'bg-primary text-white border-primary'
+						: 'bg-white text-gray-700 hover:bg-primary hover:border-primary hover:text-white'
 				} text-center py-1 px-2 rounded transition`
 			}
 			to={`${to}`}
@@ -46,11 +50,25 @@ const ProductDetailLayout = () => {
 		if (!result) navigate(`${pathname}/detail`);
 	});
 
-	const { warehouse_id } = useSelector(getProductDetailState);
+	const { warehouse_id } = useSelector(getProductDetailQueryState);
+
+	const { id } = useParams();
+	console.log('id : ', id);
+
+	const { data: product, isError, error, isLoading, isSuccess } = useGetProductByIdQuery(id);
+
+	console.log('product : ', product);
+
+	const [productName, setProductName] = useState('');
+
+	useEffect(() => {
+		if (isSuccess) setProductName(product.name);
+	}, [isSuccess]);
+
 	return (
 		<MainLayout title="Rincian Produk">
-			<MainLayout.Header title={'Paracetamol Kimia Farma 500mg'}>
-				<FilterWarehouse value={warehouse_id} action={setWarehouse} />
+			<MainLayout.Header title={productName}>
+				<FilterWarehouse value={warehouse_id} action={setQuery} />
 			</MainLayout.Header>
 			<div>
 				<div className="flex items-center gap-1 mt-4 overflow-x-scroll">

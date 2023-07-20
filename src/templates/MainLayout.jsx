@@ -13,7 +13,7 @@ const LimiterContainer = ({ children }) => {
 	return <div className="flex items-center justify-between mt-4">{children}</div>;
 };
 
-const PageTitle = ({ title }) => <h1 className="text-2xl text-gray-700">{title}</h1>;
+const PageTitle = ({ title }) => <h1 className="text-2xl text-white">{title}</h1>;
 
 const MainLayout = ({ children, title }) => {
 	return (

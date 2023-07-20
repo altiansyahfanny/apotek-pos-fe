@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAddProductFormState, setForm } from '../../redux/reducer/addProductSlice';
 import FormInput from '../FormInput';
 import { preventCharactersOtherThanNumbers } from '../../helper/form';
-import { formatToRupiah } from '../../helper/currency';
+import { formatThousand, formatToRupiah } from '../../helper/currency';
 
 const InputPrice = React.forwardRef(() => {
 	const dispatch = useDispatch();
@@ -69,7 +69,7 @@ const InputPrice = React.forwardRef(() => {
 				<FormInput.TextInput
 					type={'text'}
 					name={'capital_price'}
-					value={formatToRupiah(capital_price)}
+					value={formatThousand(capital_price)}
 					onChange={handleChangeCapitalPrice}
 					note={'(hanya untuk mempermudah penentuan harga jual)'}
 				/>
@@ -80,14 +80,14 @@ const InputPrice = React.forwardRef(() => {
 				name="count_price_with_margin"
 				onChange={handleChangeCountWithMargin}
 				checked={count_price_with_margin}
-				className="form-checkbox text-green_tea rounded border-gray-300 focus:ring-green_tea"
+				className="form-checkbox text-lime-500 rounded border-gray-300 focus:ring-lime-500"
 			/>
 
 			<FormInput>
 				<FormInput.Label title={'Margin/Keuntungan (%)'} required={true} />
 				<FormInput.TextInput
 					ref={marginRef}
-					value={formatToRupiah(profit_margin)}
+					value={formatThousand(profit_margin)}
 					type={'text'}
 					onChange={handleChangePersentaseProfitMargin}
 				/>
@@ -97,7 +97,7 @@ const InputPrice = React.forwardRef(() => {
 				<FormInput.Label title={'Harga Jual'} required={true} />
 				<FormInput.TextInput
 					ref={priceRef}
-					value={formatToRupiah(price)}
+					value={formatThousand(price)}
 					type={'text'}
 					name={'price'}
 					onChange={handleChangeProductPrice}

@@ -28,7 +28,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 		if (refreshResult?.data) {
 			// store the new token
-			api.dispatch(setAccessToken(refreshResult.data.data.access_token));
+			api.dispatch(setAccessToken(refreshResult.data.data.token));
 
 			// retry original query with new access token
 			result = await baseQuery(args, api, extraOptions);
@@ -48,8 +48,26 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 // 	tagTypes: ['Product'],
 // 	endpoints: (builder) => ({}),
 // });
+
 export const apiSlice = createApi({
-	baseQuery: fetchBaseQuery({ baseUrl: api_host }),
-	tagTypes: ['Product', 'Invoice', 'Supplier'],
+	baseQuery: baseQueryWithReauth,
+	// baseQuery: fetchBaseQuery({ baseUrl: api_host }),
+	tagTypes: [
+		'UserAcess',
+		'Permission',
+		'Product',
+		'ProductSales',
+		'Purchase',
+		'Invoice',
+		'Supplier',
+		'Warehouse',
+		'Customer',
+		'Doctor',
+		'Sale',
+		'PendingSale',
+		'Prescription',
+		'ProductUnit',
+		'Concoction',
+	],
 	endpoints: (builder) => ({}),
 });

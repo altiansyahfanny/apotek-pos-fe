@@ -1,33 +1,33 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { preventCharactersOtherThanNumbers } from '../../helper/form';
 import { getForm, setForm } from '../../redux/reducer/posSlice';
+import FormInputTable from '../FormInputTabel';
 
 const InputQty = ({ index }) => {
 	const dispatch = useDispatch();
 	const { products } = useSelector(getForm);
+	const { qty_from_product_unit, qty, price } = products[index];
 
 	const handleChangeQty = (e) => {
+		preventCharactersOtherThanNumbers(e);
 		const value = Number(e.target.value);
-
-		if (value < 1) {
-			return console.log('tidak');
-		}
 
 		const form = [...products];
 		form[index] = {
 			...form[index],
-			product_qty: value,
-			product_subtotal: value * form[index].price,
+			qty: value,
+			product_subtotal: value * qty_from_product_unit * price,
 		};
 
 		dispatch(setForm({ key: 'products', value: form }));
 	};
 	return (
-		<input
-			value={[...products][index].product_qty}
+		<FormInputTable.TextInput
+			value={qty}
 			onChange={handleChangeQty}
-			type="number"
-			className="w-16 pl-2 pr-1 py-1 border border-gray-500 text-xs focus:outline-none focus:border-green_tea focus:ring-0 rounded transition"
+			name={'qty'}
+			className={'w-16'}
 		/>
 	);
 };

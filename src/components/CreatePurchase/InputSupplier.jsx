@@ -31,7 +31,7 @@ const InputSupplier = () => {
 
 	let content;
 	if (isSuccess) {
-		content = SUPPLIERS.map((supplier, index) => (
+		content = SUPPLIERS.filter((supplier) => supplier.status).map((supplier, index) => (
 			<FormInput.InputSelect.Option key={index} value={supplier.id}>
 				{supplier.name}
 			</FormInput.InputSelect.Option>
@@ -55,7 +55,7 @@ const InputSupplier = () => {
 						</FormInput.InputSelect>
 					</div>
 					<FormInput.SideButton
-						bgColor="bg-green_tea"
+						bgColor="bg-lime-500"
 						onClick={() => dispatch(setModalDialog({ key: 'modal_add_is_open', value: true }))}
 					>
 						<HiOutlinePlus />
@@ -68,7 +68,7 @@ const InputSupplier = () => {
 				title={'Tambah Supplier'}
 				width="md"
 			>
-				<Form />
+				<Form closeModal={closeModal} />
 			</Modal>
 		</>
 	);

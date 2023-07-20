@@ -1,92 +1,58 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import CompInputProduct from '../InputProduct';
 import { useDispatch, useSelector } from 'react-redux';
 import { getForm, setForm } from '../../redux/reducer/posSlice';
 
-const PRODUCTS = [
-	{
-		product_id: 1,
-		name: 'Antangin Jrg Original Sach',
-		price: 3000,
-		product_units: [
-			{ product_unit_id: 1, product_unit_name: 'Sachet', price: 3000 },
-			{ product_unit_id: 2, product_unit_name: 'Pack', price: 20000 },
-		],
-	},
-	{
-		product_id: 2,
-		name: 'Cek Gula Darah',
-		price: 50000,
-		product_units: [
-			{ product_unit_id: 1, product_unit_name: 'Pasien', price: 50000 },
-			{ product_unit_id: 2, product_unit_name: 'Keluarga (4 Org)', price: 75000 },
-		],
-	},
-];
-
-const InputProduct = () => {
-	const [isOpen, setIsOpen] = useState(false);
-
-	const dropdownRef = useRef(null);
-
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-				setIsOpen(false);
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-		};
-	}, []);
-
-	const handleClick = () => setIsOpen(!isOpen);
-
+const InputProducts = () => {
 	const dispatch = useDispatch();
 	const { products } = useSelector(getForm);
 
-	const handleSelect = (product) => {
+	const onClick = (product) => {
+		const other_product_units = [...product.other_product_units];
+		let new_product_units = [
+			{ ...product.product_unit, number_of_other_product_units: 1, number_of_product_units: 1 },
+		];
+
+		if (other_product_units.length) {
+			other_product_units.map((other_product_unit) =>
+				new_product_units.push({
+					id: other_product_unit.product_unit.id,
+					name: other_product_unit.product_unit.name,
+					number_of_other_product_units: other_product_unit.number_of_other_product_units,
+					number_of_product_units: other_product_unit.number_of_product_units,
+				})
+			);
+		}
+
 		const value = [...products];
-		value.push({ ...product, product_qty: 1, product_subtotal: product.price });
+
+		value.push({
+			id: product.id,
+			name: product.name,
+			product_units: new_product_units,
+			product_unit_id: new_product_units[0].id,
+			product_stock_id: product.product_stocks[0].id,
+			qty: 0,
+			qty_from_product_unit: new_product_units[0].number_of_product_units,
+			price: product.price,
+			selling_price: product.price,
+			product_subtotal: 0,
+			alternative_prices: product.alternative_prices,
+			product_stocks: product.product_stocks,
+
+			price_type: 'Harga Utama',
+			product_unit_type: new_product_units[0].name,
+			product_stock_type: `${product.product_stocks[0].batch_number} (${product.product_stocks[0].qty})`,
+			is_pending: false,
+		});
 		dispatch(setForm({ key: 'products', value }));
 	};
 
 	return (
-		<div className="relative w-8/12" ref={dropdownRef}>
-			<button
-				type="button"
-				className="w-full border-2 rounded p-btn bg-white text-left"
-				onClick={handleClick}
-			>
-				<span className="text-sm text-gray-500">Ketik nama atau kode produk</span>
-			</button>
-
-			{isOpen && (
-				<div className="bg-white absolute w-full mt-2 border rounded">
-					<div className="p-2">
-						<input
-							placeholder=""
-							className="border py-2 px-3 w-full focus:outline-none focus:border-green_tea focus:border-2 rounded transition text-gray-700"
-							autoFocus
-						/>
-					</div>
-					<ul className="text-sm" onClick={() => setIsOpen(false)}>
-						{PRODUCTS.map((product, index) => (
-							<li
-								key={index}
-								className="p-2 hover:bg-green_tea hover:text-white text-gray-700 cursor-pointer"
-								onClick={() => handleSelect(product)}
-							>
-								{product.name}
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
+		<div>
+			<CompInputProduct onClick={onClick} />
 		</div>
 	);
 };
 
-export default InputProduct;
+export default InputProducts;

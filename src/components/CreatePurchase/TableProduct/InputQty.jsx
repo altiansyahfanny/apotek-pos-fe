@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+	calculateCashback,
 	calculateProductPrice,
 	calculateQty,
 	calculateSubtotal,
@@ -25,10 +26,16 @@ const InputQty = ({ product, index }) => {
 		const newProducts = [...products];
 		const numericQty = Number(qty);
 
+		const finalCashback = calculateCashback(
+			product.cashback,
+			product.cashback_with_percen,
+			product.product_purchase_price
+		);
+
 		const total_qty = calculateQty(numericQty, product.qty_from_product_unit);
 		const product_price = calculateProductPrice(
 			product.product_purchase_price,
-			product.cashback,
+			finalCashback,
 			form.tax,
 			form.tax_category
 		);

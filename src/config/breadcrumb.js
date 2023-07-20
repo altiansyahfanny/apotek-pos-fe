@@ -16,6 +16,8 @@ const ROUTES = [
 
 	{ path: '/dashboard/prescription', breadcrumb: 'Resep' },
 	{ path: '/dashboard/prescription/concoction', breadcrumb: 'Racikan' },
+	{ path: '/dashboard/prescription/redeem', breadcrumb: null },
+	{ path: '/dashboard/prescription/redeem/:id', breadcrumb: 'Tebus Resep' },
 
 	{ path: '/dashboard/sale', breadcrumb: 'Penjualan' },
 	{ path: '/dashboard/sale/create', breadcrumb: 'Point of Sale (POS)' },
@@ -33,6 +35,8 @@ const ROUTES = [
 
 	{ path: '/dashboard/setting', breadcrumb: 'Pengaturan' },
 	{ path: '/dashboard/setting/user-access', breadcrumb: 'Hak Akses Pengguna' },
+	{ path: '/dashboard/setting/user-access/update-user-access', breadcrumb: null },
+	{ path: '/dashboard/setting/user-access/update-user-access/:id', breadcrumb: 'Ubah' },
 	{ path: '/dashboard/setting/product-unit', breadcrumb: 'Satuan Produk' },
 	{ path: '/dashboard/setting/rack', breadcrumb: 'Rak' },
 	{ path: '/dashboard/setting/warehouse', breadcrumb: 'Gudang' },

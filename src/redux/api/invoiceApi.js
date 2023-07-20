@@ -15,7 +15,7 @@ export const invoiceApi = apiSlice.injectEndpoints({
 				method: 'POST',
 				body: data,
 			}),
-			invalidatesTags: ['Invoice', 'Product'],
+			invalidatesTags: ['Invoice', 'Product', 'Purchase'],
 		}),
 	}),
 });

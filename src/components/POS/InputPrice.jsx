@@ -1,29 +1,36 @@
 import React from 'react';
 import { getForm, setForm } from '../../redux/reducer/posSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { preventCharactersOtherThanNumbers } from '../../helper/form';
+import { formatThousand } from '../../helper/currency';
+import FormInputTable from '../FormInputTabel';
 
 const InputPrice = ({ index }) => {
 	const dispatch = useDispatch();
 	const { products } = useSelector(getForm);
+	const { qty, qty_from_product_unit } = products[index];
 
-	const onChange = (e) => {
-		const value = Number(e.target.value);
-		const form = [...products];
-		form[index] = {
-			...form[index],
-			price: value,
-			product_subtotal: value * form[index].product_qty,
+	const onChange = (event) => {
+		preventCharactersOtherThanNumbers(event);
+		const price = event.target.value;
+		const numbericPrice = Number(price);
+		const newProducts = [...products];
+
+		newProducts[index] = {
+			...newProducts[index],
+			price: numbericPrice,
+			product_subtotal: numbericPrice * qty * qty_from_product_unit,
 		};
 
-		dispatch(setForm({ key: 'products', value: form }));
+		dispatch(setForm({ key: 'products', value: newProducts }));
 	};
 
 	return (
-		<input
-			type="number"
-			value={products[index].price}
+		<FormInputTable.TextInput
+			name={'price'}
+			value={formatThousand(products[index].price)}
 			onChange={onChange}
-			className="w-24 pl-2 pr-1 py-1 border border-gray-500 text-xs focus:outline-none focus:border-green_tea focus:ring-0 rounded transition"
+			className="w-20"
 		/>
 	);
 };

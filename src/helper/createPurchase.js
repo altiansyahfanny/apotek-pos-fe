@@ -1,25 +1,31 @@
 const calculateQty = (qty, qty_from_product_unit) => {
 	return qty * qty_from_product_unit;
 };
+const calculateCashback = (cashback, cashback_with_percen, product_purchase_price) => {
+	if (cashback_with_percen) {
+		return (product_purchase_price * cashback) / 100;
+	}
+	return cashback;
+};
 const calculateProductPrice = (product_purchase_price, cashback, tax, tax_category) => {
 	if (tax_category == 2) {
 		return Number(
 			product_purchase_price - cashback + ((product_purchase_price - cashback) * tax) / 100
 		).toFixed(2);
-		return Math.round(
-			product_purchase_price - cashback + ((product_purchase_price - cashback) * tax) / 100
-		);
+		// return Math.round(
+		// 	product_purchase_price - cashback + ((product_purchase_price - cashback) * tax) / 100
+		// );
 	}
 	return Number(product_purchase_price - cashback).toFixed(2);
-	return Math.round(product_purchase_price - cashback);
+	// return Math.round(product_purchase_price - cashback);
 };
 const calculateSubtotal = (total_qty, product_price) => {
 	return Number(total_qty * product_price).toFixed(2);
-	return Math.round(total_qty * product_price);
+	// return Math.round(total_qty * product_price);
 };
 
 const tranformForm = (form) => {
-	console.log('form : ', form);
+	// console.log('form : ', form);
 
 	const products = form.products;
 	const newProducts = products.map((product) => {
@@ -56,4 +62,4 @@ const tranformForm = (form) => {
 	return newForm;
 };
 
-export { calculateProductPrice, calculateQty, calculateSubtotal, tranformForm };
+export { calculateProductPrice, calculateQty, calculateSubtotal, tranformForm, calculateCashback };

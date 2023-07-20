@@ -8,8 +8,10 @@ import FilterWarehouse from './FilterWarehouse';
 import Modal from './Modal';
 import FormInput from './FormInput';
 import Loader from './Loader';
+import ModalAlert from './ModalAlert';
 
 export {
+	ModalAlert,
 	Loader,
 	Navbar,
 	Sidebar,

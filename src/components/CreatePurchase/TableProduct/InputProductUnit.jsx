@@ -4,6 +4,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { PRODUCT_UNITS } from '../../../data';
 import {
+	calculateCashback,
 	calculateProductPrice,
 	calculateQty,
 	calculateSubtotal,
@@ -41,10 +42,15 @@ const InputProductUnit = ({ product, index }) => {
 		setIsOpen(false);
 		const newProducts = [...products];
 
+		const finalCashback = calculateCashback(
+			product.cashback,
+			product.cashback_with_percen,
+			product.product_purchase_price
+		);
 		const total_qty = calculateQty(product.qty, number_of_product_units);
 		const product_price = calculateProductPrice(
 			product.product_purchase_price,
-			product.cashback,
+			finalCashback,
 			form.tax,
 			form.tax_category
 		);
@@ -63,8 +69,8 @@ const InputProductUnit = ({ product, index }) => {
 		<div className="relative" ref={ref} style={{ zIndex: 40 - index }}>
 			<div
 				className={`px-2 py-1 border  ${error && 'border-red-500'} ${
-					isOpen ? 'border-green_tea' : 'border-gray-500'
-				} text-xs rounded-sm cursor-pointer flex items-center justify-between w-20`}
+					isOpen ? 'border-lime-500' : 'border-gray-500'
+				} text-xs rounded-sm cursor-pointer flex items-center justify-between w-20 z-10`}
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				<div>{selectedProductUnit ? selectedProductUnit.name : 'Satuan'}</div>
@@ -82,12 +88,12 @@ const InputProductUnit = ({ product, index }) => {
 					leaveFrom="opacity-100"
 					leaveTo="opacity-0"
 				>
-					<div className="absolute border mt-1 left-0 right-0 rounded-sm border-gray-500 overflow-hidden bg-white">
+					<div className="absolute border mt-1 left-0 right-0 rounded-sm border-gray-500 overflow-hidden bg-white z-20">
 						<ul className="py-1">
 							<li
 								key={index}
 								onClick={() => handleClick(product.product_unit.id, 1)}
-								className="px-2 py-1 hover:bg-green_tea hover:text-white cursor-pointer"
+								className="px-2 py-1 hover:bg-lime-500 hover:text-white cursor-pointer"
 							>
 								{product.product_unit.name}
 							</li>
@@ -95,7 +101,7 @@ const InputProductUnit = ({ product, index }) => {
 								<li
 									key={index}
 									onClick={() => handleClick(pu.product_unit_id, pu.number_of_product_units)}
-									className="px-2 py-1 hover:bg-green_tea hover:text-white cursor-pointer"
+									className="px-2 py-1 hover:bg-lime-500 hover:text-white cursor-pointer"
 								>{`${pu.product_unit.name} (${pu.number_of_product_units})`}</li>
 							))}
 						</ul>

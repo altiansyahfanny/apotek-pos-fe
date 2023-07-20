@@ -1,29 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
+import moment from 'moment';
 
 const initialState = {
-	limit: 10,
-	key_search: '',
-	warehouse_id: 1,
+	query: {
+		limit: 10,
+		current_page: 1,
+		key_search: '',
+		warehouse_id: 1,
+		date: {
+			start_date: moment(moment().startOf('month').toDate()).format('DD-MM-YYYY'),
+			end_date: moment(moment().endOf('month').toDate()).format('DD-MM-YYYY'),
+			key: 'selection',
+		},
+	},
+
+	modal_dialog: {
+		modal_alert_delete_is_open: false,
+	},
 };
 
 const saleSlice = createSlice({
 	name: 'sale',
 	initialState,
 	reducers: {
-		setLimit: (state, actions) => {
-			state.limit = Number(actions.payload);
+		setQuery: (state, actions) => {
+			state.query = { ...state.query, [actions.payload.key]: actions.payload.value };
 		},
-		setKeySearch: (state, actions) => {
-			state.key_search = actions.payload;
-		},
-		setWarehouse: (state, actions) => {
-			state.warehouse_id = actions.payload;
+		setModalDialog: (state, actions) => {
+			state.modal_dialog = { ...state.modal_dialog, [actions.payload.key]: actions.payload.value };
 		},
 	},
 });
 
-export const { setLimit, setKeySearch, setWarehouse } = saleSlice.actions;
+export const { setQuery, setModalDialog } = saleSlice.actions;
 
 export default saleSlice.reducer;
 
 export const getSaleState = (state) => state.sale;
+export const getSaleQueryState = (state) => state.sale.query;
+export const getSaleModalState = (state) => state.sale.modal_dialog;

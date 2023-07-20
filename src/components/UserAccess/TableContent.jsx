@@ -1,17 +1,18 @@
 import React from 'react';
 import { IoMdOptions } from 'react-icons/io';
-import Pagination from '../Pagination';
+import { useSelector } from 'react-redux';
+import { getUserAccessQueryState, setQuery } from '../../redux/reducer/userAccessSlice';
 import Table from '../Table';
+import { AiOutlineArrowRight } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
-const StatusBadge = () => {
-	return (
-		<span className="bg-green_tea text-white text-[0.6rem] px-2 py-0.5 rounded group-hover:bg-white group-hover:text-green_tea">
-			Dijual
-		</span>
-	);
-};
+const TableContent = ({ data }) => {
+	const navigate = useNavigate();
+	const { limit, current_page } = useSelector(getUserAccessQueryState);
 
-const TableContent = () => {
+	const onClickEdit = (user) => {
+		navigate('update-user-access/' + user.id);
+	};
 	return (
 		<div className="mt-2">
 			<Table>
@@ -19,29 +20,31 @@ const TableContent = () => {
 					<Table.THD textAlign="center">No</Table.THD>
 					<Table.THD>Nama Grup</Table.THD>
 					<Table.THD>Deskripsi Grup</Table.THD>
-					<Table.THD textAlign="center">Aksi</Table.THD>
+					<Table.THD textAlign="right">Aksi</Table.THD>
 				</Table.TH>
 				<Table.TB>
-					{Array(10)
-						.fill(null)
-						.map((_, index) => (
+					{data.data
+						// .filter((user) => user.id !== 1)
+						.map((user, index) => (
 							<Table.TBR key={index}>
 								<Table.TBD textAlign="center">{index + 1}</Table.TBD>
-								<Table.TBD>Admin</Table.TBD>
+								<Table.TBD>{user.name}</Table.TBD>
 								<Table.TBD>Gudang Utama</Table.TBD>
-								<Table.TBD textAlign="center">
-									<div className="flex justify-center p-1 cursor-pointer">
-										<IoMdOptions />
-									</div>
+								<Table.TBD textAlign="right">
+									<Table.ButtonAction labelIcon={<IoMdOptions />}>
+										<Table.ButtonAction.Option
+											icon={<AiOutlineArrowRight size={18} />}
+											text={'Edit'}
+											action={() => onClickEdit(user)}
+										/>
+									</Table.ButtonAction>
 								</Table.TBD>
 							</Table.TBR>
 						))}
 				</Table.TB>
 			</Table>
 
-			<div className="mt-1">
-				<Pagination />
-			</div>
+			<Table.Pagination {...{ data, current_page, setQuery, limit }} />
 		</div>
 	);
 };

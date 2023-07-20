@@ -13,7 +13,7 @@ const FilterWarehouse = ({ value, action }) => {
 	const dispatch = useDispatch();
 
 	const onSelect = (id) => {
-		dispatch(action(Number(id)));
+		dispatch(action({ key: 'warehouse_id', value: Number(id) }));
 	};
 	return (
 		<Dropdown {...{ labelIcon: <FaWarehouse size={14} />, value, action }}>

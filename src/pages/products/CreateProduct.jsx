@@ -8,13 +8,13 @@ import InputPrice from '../../components/CreateProduct/InputPrice';
 import InputProductUnit from '../../components/CreateProduct/InputProductUnit';
 import { PRODUCT_STATUSES, RACKS, SUPPLIERS } from '../../data';
 import { toastError, toastSuccess } from '../../helper/toast';
-import { useCreateProductMutation } from '../../redux/api/productApi';
+import { useCreateProductMutation, useUpdateProductMutation } from '../../redux/api/productApi';
 import { getAddProductFormState, resetForm, setForm } from '../../redux/reducer/addProductSlice';
 import { resetErrors, setErrors } from '../../redux/reducer/validationSlice';
 import { MainLayout } from '../../templates';
 import { useNavigate } from 'react-router-dom';
 import { generateSKU, tranformForm } from '../../helper/createProduct';
-import { formatToRupiah } from '../../helper/currency';
+import { formatThousand, formatToRupiah } from '../../helper/currency';
 
 const preventCharactersOtherThanNumbers = (event) => {
 	event.target.value = event.target.value.replace(/[^0-9]/g, '');
@@ -26,25 +26,31 @@ const CreateProduct = () => {
 	const form = useSelector(getAddProductFormState);
 	const { product_category_id, price } = useSelector(getAddProductFormState);
 
-	const [create, {}] = useCreateProductMutation();
+	const [create, { isLoading }] = useCreateProductMutation();
+	const [update, responseUpdate] = useUpdateProductMutation();
 
 	const handleSubmit = async () => {
 		const data = tranformForm(form);
-		// return console.log('data : ', data);
+
+		console.log('data : ', data);
 		// return;
 		dispatch(resetErrors());
 
 		try {
-			const response = await create(data).unwrap();
+			let response;
+
+			if (form.is_edit) {
+				response = await update(data).unwrap();
+			} else {
+				response = await create(data).unwrap();
+			}
 
 			navigate('/dashboard/products', { replace: true });
 			toastSuccess(response.message);
 			dispatch(resetForm());
 		} catch (error) {
 			if (error.status === 422) return dispatch(setErrors(error.data.errors));
-			// toastError(error.data.message);
-
-			console.log('error : ', error);
+			toastError(error.data.message);
 		}
 	};
 
@@ -94,7 +100,7 @@ const CreateProduct = () => {
 								/>
 							</div>
 							<FormInput.SideButton
-								bgColor="bg-green_tea"
+								bgColor="bg-lime-500"
 								onClick={() =>
 									dispatch(setForm({ key: 'sku_code', value: generateSKU(form.name) }))
 								}
@@ -194,7 +200,7 @@ const CreateProduct = () => {
 						<FormInput>
 							<FormInput.Label title={'Harga Jual'} required={true} />
 							<FormInput.TextInput
-								value={formatToRupiah(price)}
+								value={formatThousand(price)}
 								type={'text'}
 								name={'price'}
 								onChange={handleChangeNumber}
@@ -206,10 +212,11 @@ const CreateProduct = () => {
 			<hr className="my-4" />
 			<div className="flex justify-end">
 				<button
-					className="bg-green_tea text-sm text-white px-5 py-1.5 rounded hover:bg-secondary transition"
+					className="bg-lime-500 text-sm text-white px-5 py-1.5 rounded hover:bg-primary transition"
 					onClick={handleSubmit}
+					disabled={isLoading || responseUpdate.isLoading}
 				>
-					Simpan
+					{form.is_edit ? 'Ubah' : 'Simpan'}
 				</button>
 			</div>
 		</MainLayout>

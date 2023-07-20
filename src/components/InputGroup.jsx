@@ -2,7 +2,7 @@ import React from 'react';
 
 const Text = ({ text }) => {
 	return (
-		<div className=" grid place-content-center text-sm px-3 bg-green_tea text-white whitespace-nowrap">
+		<div className=" grid place-content-center text-sm px-3 bg-lime-500 text-white whitespace-nowrap">
 			{text}
 		</div>
 	);

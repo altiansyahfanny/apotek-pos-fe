@@ -24,7 +24,6 @@ const ErrorMessage = () => (
 
 const InputProduct = () => {
 	const { data: PRODUCTS, isError, isLoading, isSuccess, error } = useGetProductsQuery();
-	// console.log('PRODUCTS : ', PRODUCTS);
 
 	const [isOpen, setIsOpen] = useState(false);
 	const ref = useRef(null);
@@ -79,6 +78,7 @@ const InputProduct = () => {
 			product_price,
 			product_purchase_price: product.capital_price,
 			cashback: 0,
+			cashback_with_percen: 0,
 			capital_price: product.capital_price,
 			analysis: 0,
 			subtotal: 0,
@@ -106,7 +106,7 @@ const InputProduct = () => {
 					.map((product) => (
 						<li
 							key={product.id}
-							className="py-1.5 text-sm text-gray-700 cursor-pointer hover:bg-green_tea hover:text-white px-1.5"
+							className="py-1.5 text-sm text-gray-700 cursor-pointer hover:bg-lime-500 hover:text-white px-1.5"
 							onClick={() => onClick(product)}
 						>
 							{product.name}

@@ -32,10 +32,6 @@ const TableContent = () => {
 						))}
 				</Table.TB>
 			</Table>
-
-			<div className="mt-1">
-				<Pagination />
-			</div>
 		</div>
 	);
 };

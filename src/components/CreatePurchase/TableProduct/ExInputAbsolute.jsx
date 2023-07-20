@@ -59,7 +59,7 @@ const InputProductPrice = ({ index }) => {
 
 	return (
 		<div className="relative w-24">
-			<div className={`px-2 border ${isFocused ? 'border-green_tea' : 'border-gray-500 '} rounded`}>
+			<div className={`px-2 border ${isFocused ? 'border-lime-500' : 'border-gray-500 '} rounded`}>
 				<div className="py-1 whitespace-nowrap overflow-hidden flex items-center">
 					<div>{formatToRupiah(product.product_price)}</div>
 					{isFocused && blink && <div className="w-[0.05rem] h-4 bg-gray-500" />}

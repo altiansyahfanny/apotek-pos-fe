@@ -6,6 +6,7 @@ const initialState = {
 		profit_margin: 0,
 
 		// form to send
+		id: '',
 		factory_name: '',
 		product_category_id: '',
 		product_unit_id: '',
@@ -17,8 +18,8 @@ const initialState = {
 		name: '',
 		sku_code: '',
 		barcode: '',
-		active_substance: '',
-		other_information: '',
+		active_substance: null,
+		other_information: null,
 		other_product_units: [],
 		alternative_prices: [],
 	},
@@ -31,13 +32,16 @@ const AddProductSlice = createSlice({
 		setForm: (state, actions) => {
 			state.form = { ...state.form, [actions.payload.key]: actions.payload.value };
 		},
+		setAllForm: (state, actions) => {
+			state.form = actions.payload;
+		},
 		resetForm: (state, actions) => {
 			state.form = initialState.form;
 		},
 	},
 });
 
-export const { setForm, resetForm } = AddProductSlice.actions;
+export const { setForm, resetForm, setAllForm } = AddProductSlice.actions;
 
 export default AddProductSlice.reducer;
 

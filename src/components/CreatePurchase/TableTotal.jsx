@@ -81,7 +81,7 @@ const TableTotal = () => {
 	return (
 		<div>
 			<table className="w-full text-xs text-gray-500 rounded-sm overflow-hidden">
-				<thead className="bg-secondary text-white">
+				<thead className="bg-primary text-white">
 					<tr className="">
 						<TH textAlign="text-center" title={'Item Barang'} />
 						<TH textAlign="text-center" title={'Total Harga'} />
